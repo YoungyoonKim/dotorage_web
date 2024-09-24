@@ -401,16 +401,16 @@ window.addEventListener('load', function () {
                 */
                 customOptionStrongLeft.textContent = '왼손 커스텀 제작하기';
                 customOptionDivLeft.id = 'custom-option-left';
-                customOptionDivLeft.className = 'custom-option-list';
-                customOptionBoxLeft.className = 'custom-option-box';
+                customOptionDivLeft.className = 'custom-option-list-left';
+                customOptionBoxLeft.className = 'custom-option-box-left';
                 customOptionDivLeft.append(customOptionStrongLeft);
                 customOptionDivLeft.append(customOptionBoxLeft);
 
 
                 customOptionStrongRight.textContent = '오른손 커스텀 제작하기';
                 customOptionDivRight.id = 'custom-option-right';
-                customOptionDivRight.className = 'custom-option-list';
-                customOptionBoxRight.className = 'custom-option-box';
+                customOptionDivRight.className = 'custom-option-list-right';
+                customOptionBoxRight.className = 'custom-option-box-right';
                 customOptionDivRight.append(customOptionStrongRight);
                 customOptionDivRight.append(customOptionBoxRight);
 
