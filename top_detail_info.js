@@ -456,16 +456,16 @@ window.addEventListener('load', function () {
 
                 // 왼손커스텀필드 추가하고 querySelector로 각 텍스트, obj, 이미지 필드를 가져오기
                 customOptionBoxLeft.innerHTML = customFormField.custom_left_hand_layout + customFormField.custom_left_hand_style + customFormField.custom_left_hand_text_color + customFormField.custom_left_hand_text + customFormField.custom_left_hand_obj + customFormField.custom_left_hand_image;
-                var customTextElLeft = customOptionBoxLeft.querySelector('#custom-text input');
-                var customObjElLeft = customOptionBoxLeft.querySelector('#custom-obj input');
-                var customImageElLeft = customOptionBoxLeft.querySelector('#custom-image input');
+                var customTextElLeft = customOptionBoxLeft.querySelector('#custom-text-left input'); //왼손 텍스트 입력 필드
+                var customObjElLeft = customOptionBoxLeft.querySelector('#custom-obj-left input'); //왼손 obj 입력 필드
+                var customImageElLeft = customOptionBoxLeft.querySelector('#custom-image-left input'); //왼손 image 입력 필드
 
 
                 // 오른손커스텀필드 추가하고 querySelector로 각 텍스트, obj, 이미지 필드를 가져오기
                 customOptionBoxRight.innerHTML = customFormField.custom_right_hand_layout + customFormField.custom_right_hand_style + customFormField.custom_right_hand_text_color + customFormField.custom_right_hand_text + customFormField.custom_right_hand_obj + customFormField.custom_right_hand_image;
-                var customTextElRight = customOptionBoxRight.querySelector('#custom-text input');
-                var customObjElRight = customOptionBoxRight.querySelector('#custom-obj input');
-                var customImageElRight = customOptionBoxRight.querySelector('#custom-image input');
+                var customTextElRight = customOptionBoxRight.querySelector('#custom-text-right input'); //오른손 텍스트 입력 필드
+                var customObjElRight = customOptionBoxRight.querySelector('#custom-obj-right input'); //오른손 obj 입력 필드
+                var customImageElRight = customOptionBoxRight.querySelector('#custom-image-right input'); //오른손 image 입력 필드
 
                 //왼손**customObjElLeft**의 값을 설정하는 코드야. 텍스트가 들어갈 영역, 
                 customObjElLeft.value = customInfo.leftHandClipPath.width + '||' + customInfo.leftHandClipPath.height + '||' + customInfo.leftHandClipPath.radius;
