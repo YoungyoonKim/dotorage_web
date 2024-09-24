@@ -179,8 +179,8 @@ window.addEventListener('load', function () {
              * customTextPosition 값에 따라 실행
              */
             var customTextPosition = document.querySelector('.custom_text_position');
-
-            if (customTextPosition && customTextPosition.textContent.toUpperCase() === 'SCARF') { // SCARF일 때 실행할 로직
+            // SCARF일 때 실행할 로직
+            if (customTextPosition && customTextPosition.textContent.toUpperCase() === 'SCARF') { 
 
                 /**
                  * 커스텀 관련 옵션으로 Element 만들기
@@ -275,7 +275,110 @@ window.addEventListener('load', function () {
                 var customOptionEl = document.querySelector('.custom_page').closest('tr'); //상품 옵션 테이블의 특정 행을 찾기 위한 작업이야.
 
                 customOptionEl.classList.add('displaynone'); //즉, 이 코드는 커스텀 옵션 테이블의 특정 행을 숨기기 위한 작업으로, 필요에 따라 특정 옵션을 표시하지 않게 만드는 거야.
-                
+
+
+                // 폰트로딩완료시
+                function doActive() {
+                    console.log('구글폰트 로딩완료 - SCARF');
+
+
+                    // 커스텀텍스트에디터 생성
+                    var customTextEditor = new CustomTextEditor.Editor({
+                        target: selectorEl,
+                        bgImage: mockupImage,
+                        customTextEl: customTextEl,
+                        spinHandle: spinHandle,
+                        clipPath: {
+                            width: customInfo.clipPath.width,
+                            height: customInfo.clipPath.height,
+                            radius: customInfo.clipPath.radius
+                        },
+                        defaults: {
+                            fontFamily: 'Black Han Sans',
+                            align: '가운데하단',
+                            text: '',
+                            color: '#FFFFFF'
+                        }
+                    }, function () {
+                        console.log('로딩완료');
+                    });
+
+                    /*
+                    * ----------------------------------------------------------------
+                    * 이벤트 할당
+                    * ----------------------------------------------------------------
+                    */
+
+                    /**
+                     * 텍스트 필드가 채워질때
+                     * Lodash를 이용하여 입력시간 이벤트를 지연한다.
+                     */
+                    customTextEl.addEventListener('keyup', _.debounce(function (e) {
+                        customTextEditor.setText(this.value);
+                    }, 300));
+
+                    /**
+                     * 케이스색상 옵션을 선택했을때
+                     */
+                    if (customColorEl) {
+                        customTextEditor.addEvent(customColorEl, 'click', 'custom_color', function () {
+
+                            return [null, customImageEl];
+                        });
+                    }
+
+                    /**
+                     * 텍스트 레이아웃을 선택했을때
+                     */
+                    if (customLayoutEl) {
+                        customTextEditor.addEvent(customLayoutEl, 'click', 'custom_layout');
+                    }
+                    /**
+                     * 텍스트 스타일을 선택했을때
+                     */
+                    if (customStyleEl) {
+                        customTextEditor.addEvent(customStyleEl, 'click', 'custom_font');
+                    }
+
+                    /**
+                     * 텍스트 색상을 선택했을때
+                     */
+                    if (customTextColorEl) {
+                        customTextEditor.addEvent(customTextColorEl, 'click', 'custom_font_color');
+                    }
+                }
+
+                /*
+                 * ----------------------------------------------------------------
+                 * 반응형 관련
+                 * ----------------------------------------------------------------
+                 */
+
+                /**
+                 * RESIZE 관련 기능
+                 */
+                (function () {
+                    window.addEventListener('resize', resizeThrottler, false);
+
+                    var resizeTimeout;
+                    function resizeThrottler() {
+                        // ignore resize events as long as an actualResizeHandler execution is in the queue
+                        if (!resizeTimeout) {
+                            resizeTimeout = setTimeout(function () {
+                                resizeTimeout = null;
+                                actualResizeHandler();
+
+                                // The actualResizeHandler will execute at a rate of 15fps
+                            }, 66);
+                        }
+                    }
+
+                    function actualResizeHandler() {
+                        // handle the resize event
+                        customTextEditor.resizeCanvasZoom(selectorEl.offsetWidth, selectorEl.offsetHeight);
+                    }
+                }());
+
             } else if (customTextPosition && customTextPosition.textContent.toUpperCase() === 'GLOVE') { // GLOVE일 때 실행할 로직
                 // 왼손 옵션들
                 var customTextElLeft = '';
@@ -434,211 +537,139 @@ window.addEventListener('load', function () {
 
                 var customOptionElRight = document.querySelector('.custom_page_right').closest('tr');
                 customOptionElRight.classList.add('displaynone');
-            }
 
+                // 폰트로딩완료시
+                function doActive() {
+                    console.log('구글폰트 로딩완료 - GLOVE');
 
-
-
-
-
-
-
-
-
-            // 폰트로딩완료시
-            function doActive() {
-                console.log('구글폰트 로딩완료');
-
-
-                // 커스텀텍스트에디터 생성
-                var customTextEditor = new CustomTextEditor.Editor({
-                    target: selectorEl,
-                    bgImage: mockupImage,
-                    customTextEl: customTextEl,
-                    spinHandle: spinHandle,
-                    clipPath: {
-                        width: customInfo.clipPath.width,
-                        height: customInfo.clipPath.height,
-                        radius: customInfo.clipPath.radius
-                    },
-                    defaults: {
-                        fontFamily: 'Black Han Sans',
-                        align: '가운데하단',
-                        text: '',
-                        color: '#FFFFFF'
-                    }
-                }, function () {
-                    console.log('로딩완료');
-                });
-
-                // 왼손 커스텀텍스트에디터 생성
-                var customTextEditorLeft = new CustomTextEditor.Editor({
-                    target: selectorElLeft, // 왼손 미리보기 캔버스
-                    bgImage: mockupImage,
-                    customTextEl: customTextElLeft, // 왼손 텍스트 입력 필드
-                    spinHandle: spinHandle,
-                    clipPath: {
-                        width: customInfo.leftHandClipPath.width,
-                        height: customInfo.leftHandClipPath.height,
-                        radius: customInfo.leftHandClipPath.radius
-                    },
-                    defaults: {
-                        fontFamily: 'Black Han Sans',
-                        align: '가운데하단',
-                        text: '',
-                        color: '#FFFFFF'
-                    }
-                }, function () {
-                    console.log('왼손 커스텀 에디터 로딩완료');
-                });
-                
-                // 오른손 커스텀텍스트에디터 생성
-                var customTextEditorRight = new CustomTextEditor.Editor({
-                    target: selectorElRight, // 오른손 미리보기 캔버스
-                    bgImage: mockupImage,
-                    customTextEl: customTextElRight, // 오른손 텍스트 입력 필드
-                    spinHandle: spinHandle,
-                    clipPath: {
-                        width: customInfo.rightHandClipPath.width,
-                        height: customInfo.rightHandClipPath.height,
-                        radius: customInfo.rightHandClipPath.radius
-                    },
-                    defaults: {
-                        fontFamily: 'Black Han Sans',
-                        align: '가운데하단',
-                        text: '',
-                        color: '#FFFFFF'
-                    }
-                }, function () {
-                    console.log('오른손 커스텀 에디터 로딩완료');
-                });
-                
-
-
-
-
-                /*
-                 * ----------------------------------------------------------------
-                 * 이벤트 할당
-                 * ----------------------------------------------------------------
-                 */
-
-                /**
-                 * 텍스트 필드가 채워질때
-                 * Lodash를 이용하여 입력시간 이벤트를 지연한다.
-                 */
-                customTextEl.addEventListener('keyup', _.debounce(function (e) {
-                    customTextEditor.setText(this.value);
-                }, 300));
-
-                /**
-                 * 케이스색상 옵션을 선택했을때
-                 */
-                if (customColorEl) {
-                    customTextEditor.addEvent(customColorEl, 'click', 'custom_color', function () {
-
-                        return [null, customImageEl];
-                    });
-                }
-
-                /**
-                 * 텍스트 레이아웃을 선택했을때
-                 */
-                if (customLayoutEl) {
-                    customTextEditor.addEvent(customLayoutEl, 'click', 'custom_layout');
-                }
-                /**
-                 * 텍스트 스타일을 선택했을때
-                 */
-                if (customStyleEl) {
-                    customTextEditor.addEvent(customStyleEl, 'click', 'custom_font');
-                }
-
-                /**
-                 * 텍스트 색상을 선택했을때
-                 */
-                if (customTextColorEl) {
-                    customTextEditor.addEvent(customTextColorEl, 'click', 'custom_font_color');
-                }
-                
-                
-                // 텍스트 필드가 채워질 때 (왼손)
-                customTextElLeft.addEventListener('keyup', _.debounce(function (e) {
-                    customTextEditorLeft.setText(this.value); // 왼손 커스텀 에디터에 텍스트 설정
-                }, 300));
-
-                // 텍스트 레이아웃 선택 시 (왼손)
-                if (customLayoutElLeft) {
-                    customTextEditorLeft.addEvent(customLayoutElLeft, 'click', 'custom_layout');
-                }
-
-                // 텍스트 스타일 선택 시 (왼손)
-                if (customStyleElLeft) {
-                    customTextEditorLeft.addEvent(customStyleElLeft, 'click', 'custom_font');
-                }
-
-                // 텍스트 색상 선택 시 (왼손)
-                if (customTextColorElLeft) {
-                    customTextEditorLeft.addEvent(customTextColorElLeft, 'click', 'custom_font_color');
-                }
-
-
-                // 텍스트 필드가 채워질 때 (오른손)
-                customTextElRight.addEventListener('keyup', _.debounce(function (e) {
-                    customTextEditorRight.setText(this.value); // 오른손 커스텀 에디터에 텍스트 설정
-                }, 300));
-
-                // 텍스트 레이아웃 선택 시 (오른손)
-                if (customLayoutElRight) {
-                    customTextEditorRight.addEvent(customLayoutElRight, 'click', 'custom_layout');
-                }
-
-                // 텍스트 스타일 선택 시 (오른손)
-                if (customStyleElRight) {
-                    customTextEditorRight.addEvent(customStyleElRight, 'click', 'custom_font');
-                }
-
-                // 텍스트 색상 선택 시 (오른손)
-                if (customTextColorElRight) {
-                    customTextEditorRight.addEvent(customTextColorElRight, 'click', 'custom_font_color');
-                }
-
-
-                /*
-                 * ----------------------------------------------------------------
-                 * 반응형 관련
-                 * ----------------------------------------------------------------
-                 */
-
-                /**
-                 * RESIZE 관련 기능
-                 */
-                (function () {
-                    window.addEventListener('resize', resizeThrottler, false);
-
-                    var resizeTimeout;
-                    function resizeThrottler() {
-                        // ignore resize events as long as an actualResizeHandler execution is in the queue
-                        if (!resizeTimeout) {
-                            resizeTimeout = setTimeout(function () {
-                                resizeTimeout = null;
-                                actualResizeHandler();
-
-                                // The actualResizeHandler will execute at a rate of 15fps
-                            }, 66);
+                    // 왼손 커스텀텍스트에디터 생성
+                    var customTextEditorLeft = new CustomTextEditor.Editor({
+                        target: selectorElLeft, // 왼손 미리보기 캔버스
+                        bgImage: mockupImage,
+                        customTextEl: customTextElLeft, // 왼손 텍스트 입력 필드
+                        spinHandle: spinHandle,
+                        clipPath: {
+                            width: customInfo.leftHandClipPath.width,
+                            height: customInfo.leftHandClipPath.height,
+                            radius: customInfo.leftHandClipPath.radius
+                        },
+                        defaults: {
+                            fontFamily: 'Black Han Sans',
+                            align: '가운데하단',
+                            text: '',
+                            color: '#FFFFFF'
                         }
+                    }, function () {
+                        console.log('왼손 커스텀 에디터 로딩완료');
+                    });
+                    
+                    // 오른손 커스텀텍스트에디터 생성
+                    var customTextEditorRight = new CustomTextEditor.Editor({
+                        target: selectorElRight, // 오른손 미리보기 캔버스
+                        bgImage: mockupImage,
+                        customTextEl: customTextElRight, // 오른손 텍스트 입력 필드
+                        spinHandle: spinHandle,
+                        clipPath: {
+                            width: customInfo.rightHandClipPath.width,
+                            height: customInfo.rightHandClipPath.height,
+                            radius: customInfo.rightHandClipPath.radius
+                        },
+                        defaults: {
+                            fontFamily: 'Black Han Sans',
+                            align: '가운데하단',
+                            text: '',
+                            color: '#FFFFFF'
+                        }
+                    }, function () {
+                        console.log('오른손 커스텀 에디터 로딩완료');
+                    });
+                    
+                    /*
+                    * ----------------------------------------------------------------
+                    * 이벤트 할당
+                    * ----------------------------------------------------------------
+                    */
+
+                    /**
+                     * 텍스트 필드가 채워질때
+                     * Lodash를 이용하여 입력시간 이벤트를 지연한다.
+                     */
+                    // 텍스트 필드가 채워질 때 (왼손)
+                    customTextElLeft.addEventListener('keyup', _.debounce(function (e) {
+                        customTextEditorLeft.setText(this.value); // 왼손 커스텀 에디터에 텍스트 설정
+                    }, 300));
+
+                    // 텍스트 레이아웃 선택 시 (왼손)
+                    if (customLayoutElLeft) {
+                        customTextEditorLeft.addEvent(customLayoutElLeft, 'click', 'custom_layout');
                     }
 
-                    function actualResizeHandler() {
-                        // handle the resize event
-                        customTextEditor.resizeCanvasZoom(selectorEl.offsetWidth, selectorEl.offsetHeight);
-                        customTextEditorLeft.resizeCanvasZoom(selectorElLeft.offsetWidth, selectorElLeft.offsetHeight); //왼손
-                        customTextEditorRight.resizeCanvasZoom(selectorElRight.offsetWidth, selectorElRight.offsetHeight);//오른손
-
-
+                    // 텍스트 스타일 선택 시 (왼손)
+                    if (customStyleElLeft) {
+                        customTextEditorLeft.addEvent(customStyleElLeft, 'click', 'custom_font');
                     }
-                }());
 
+                    // 텍스트 색상 선택 시 (왼손)
+                    if (customTextColorElLeft) {
+                        customTextEditorLeft.addEvent(customTextColorElLeft, 'click', 'custom_font_color');
+                    }
+
+
+                    // 텍스트 필드가 채워질 때 (오른손)
+                    customTextElRight.addEventListener('keyup', _.debounce(function (e) {
+                        customTextEditorRight.setText(this.value); // 오른손 커스텀 에디터에 텍스트 설정
+                    }, 300));
+
+                    // 텍스트 레이아웃 선택 시 (오른손)
+                    if (customLayoutElRight) {
+                        customTextEditorRight.addEvent(customLayoutElRight, 'click', 'custom_layout');
+                    }
+
+                    // 텍스트 스타일 선택 시 (오른손)
+                    if (customStyleElRight) {
+                        customTextEditorRight.addEvent(customStyleElRight, 'click', 'custom_font');
+                    }
+
+                    // 텍스트 색상 선택 시 (오른손)
+                    if (customTextColorElRight) {
+                        customTextEditorRight.addEvent(customTextColorElRight, 'click', 'custom_font_color');
+                    }
+
+
+                    /*
+                    * ----------------------------------------------------------------
+                    * 반응형 관련
+                    * ----------------------------------------------------------------
+                    */
+
+                    /**
+                     * RESIZE 관련 기능
+                     */
+                    (function () {
+                        window.addEventListener('resize', resizeThrottler, false);
+
+                        var resizeTimeout;
+                        function resizeThrottler() {
+                            // ignore resize events as long as an actualResizeHandler execution is in the queue
+                            if (!resizeTimeout) {
+                                resizeTimeout = setTimeout(function () {
+                                    resizeTimeout = null;
+                                    actualResizeHandler();
+
+                                    // The actualResizeHandler will execute at a rate of 15fps
+                                }, 66);
+                            }
+                        }
+
+                        function actualResizeHandler() {
+                            // handle the resize event
+                            customTextEditorLeft.resizeCanvasZoom(selectorElLeft.offsetWidth, selectorElLeft.offsetHeight); //왼손
+                            customTextEditorRight.resizeCanvasZoom(selectorElRight.offsetWidth, selectorElRight.offsetHeight);//오른손
+
+
+                        }
+                    }());
+                }
             } // End 폰트로딩완료
 
 
